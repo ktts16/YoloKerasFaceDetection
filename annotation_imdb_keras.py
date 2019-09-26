@@ -7,9 +7,11 @@ from datetime import datetime
 import numpy as np
 import os
 import shutil
+from pathlib import Path
+home = str(Path.home()) + '/'
 
-if(os.path.exists("./dataset/imdb_crop/")):
-	DATASET_ROOT_PATH=""
+if(os.path.exists(os.path.join(home, "dataset/imdb_crop/"))):
+	DATASET_ROOT_PATH=home
 else:
 	DATASET_ROOT_PATH="/Volumes/TB4/Keras/"
 
@@ -118,8 +120,8 @@ age = [calc_age(photo_taken[i], dob[i]) for i in range(len(dob))]
 for i in range(len(full_path)):
 	if(not is_valid(face_score[i],second_face_score[i],age[i],gender[i])):
 		continue
-	print "path:"+str(full_path[i])+" gender:"+str(gender[i])
-	print ""+get_age_path(age[i])+" "+get_gender_path(gender[i])
+	print("path:"+str(full_path[i])+" gender:"+str(gender[i]))
+	print(""+get_age_path(age[i])+" "+get_gender_path(gender[i]))
 	train_or_validation="train"
 	if(i%4==0):
 		train_or_validation="validation"
