@@ -7,13 +7,14 @@ from datetime import datetime
 import numpy as np
 import os
 import shutil
-from pathlib import Path
-home = str(Path.home()) + '/'
 
-if(os.path.exists(os.path.join(home, "dataset/imdb_crop/"))):
-	DATASET_ROOT_PATH=home
+from pathlib import Path
+LOCAL_DATASET_ROOT_PATH = str(Path.home()) + '/'
+
+if(os.path.exists("./dataset/imdb_crop/")):
+	DATASET_ROOT_PATH=""
 else:
-	DATASET_ROOT_PATH="/Volumes/TB4/Keras/"
+	DATASET_ROOT_PATH=LOCAL_DATASET_ROOT_PATH
 
 OUTPUT_LABEL="agegender_imdb"
 
