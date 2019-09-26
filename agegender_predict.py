@@ -191,15 +191,18 @@ if OPTIONAL_MODE=="benchmark":
 # Normal test
 # ----------------------------------------------
 
+from pathlib import Path
+LOCAL_DATASET_ROOT_PATH = str(Path.home()) + '/'
+
 if(os.path.exists("./dataset/agegender_adience/")):
 	DATASET_PATH_ADIENCE=""
 else:
-	DATASET_PATH_ADIENCE="/Volumes/TB4/Keras/"
+	DATASET_PATH_ADIENCE=LOCAL_DATASET_ROOT_PATH
 
 if(os.path.exists("./dataset/agegender_imdb/")):
 	DATASET_PATH_IMDB=""
 else:
-	DATASET_PATH_IMDB="/Volumes/TB4/Keras/"
+	DATASET_PATH_IMDB=LOCAL_DATASET_ROOT_PATH
 
 image_list=[
 	DATASET_PATH_ADIENCE+'dataset/agegender_adience/annotations/agegender/validation/0_0-2_m/landmark_aligned_face.84.8277643357_43f107482d_o.jpg',
