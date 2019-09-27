@@ -8,13 +8,12 @@ import numpy as np
 import os
 import shutil
 
-from pathlib import Path
-LOCAL_DATASET_ROOT_PATH = str(Path.home()) + '/'
+from utils import get_local_dataset_root_path
 
 if(os.path.exists("./dataset/imdb_crop/")):
 	DATASET_ROOT_PATH=""
 else:
-	DATASET_ROOT_PATH=LOCAL_DATASET_ROOT_PATH
+	DATASET_ROOT_PATH=get_local_dataset_root_path()
 
 OUTPUT_LABEL="agegender_imdb"
 
