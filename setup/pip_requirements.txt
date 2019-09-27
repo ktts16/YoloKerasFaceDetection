@@ -1,3 +1,5 @@
 scipy
 opencv-python
 matplotlib
+keras
+tensorflow-gpu
