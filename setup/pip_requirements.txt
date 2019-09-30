@@ -3,3 +3,4 @@ opencv-python
 matplotlib
 keras
 tensorflow-gpu
+keras_squeezenet
