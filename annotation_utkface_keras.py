@@ -9,10 +9,12 @@ import os
 import shutil
 import glob
 
+from utils import get_local_dataset_root_path
+
 if(os.path.exists("./dataset/UTKFace/")):
 	DATASET_ROOT_PATH=""
 else:
-	DATASET_ROOT_PATH="/Volumes/TB4/Keras/"
+	DATASET_ROOT_PATH=get_local_dataset_root_path()
 
 OUTPUT_LABEL="agegender_utk"
 
@@ -89,7 +91,7 @@ def get_age_path(age):
 i=0
 for image_path in glob.glob(UTKFACE_PATH+"*.jpg"):
 	image_name = os.path.basename(image_path)
-	print image_name
+	print(image_name)
 	age, gender = image_name.split("_")[:2]
 	gender=int(gender)
 	age=min(int(age), 100)
