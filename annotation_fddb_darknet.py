@@ -12,10 +12,12 @@ import sys
 import glob
 import cv2
 
+from utils import get_local_dataset_root_path
+
 if(os.path.exists("./dataset/fddb/")):
 	DATASET_ROOT_PATH="./"
 else:
-	DATASET_ROOT_PATH="/Volumes/ST5/keras/"
+	DATASET_ROOT_PATH=get_local_dataset_root_path()
 
 OUTPUT_LABEL="annotations_darknet"
 OUTPUT_BASE_PATH=DATASET_ROOT_PATH+"dataset/fddb/FDDB-folds/"+OUTPUT_LABEL
@@ -53,6 +55,8 @@ for list in range(1,11):
 		file_no=file_no+1
 
 		image=cv2.imread(image_path)
+		print(image_path)
+		print(image)
 		#print(image.shape)
 		imagew=image.shape[1]
 		imageh=image.shape[0]
