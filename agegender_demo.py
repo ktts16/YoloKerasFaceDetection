@@ -237,7 +237,7 @@ def crop(x,y,w,h,margin,img_width,img_height):
 	return xmin,xmax,ymin,ymax
 
 #display result
-def show_results(img,results, img_width, img_height, model_age, model_gender, model_emotion):
+def show_results(img,results, img_width, img_height, model_age, model_gender, model_emotion, flag_show_result):
 	img_cp = img.copy()
 	for i in range(len(results)):
 		#display detected face
@@ -275,7 +275,7 @@ def show_results(img,results, img_width, img_height, model_age, model_gender, mo
 		lines_gender=open('words/agegender_gender_words.txt').readlines()
 		lines_fer2013=open('words/emotion_words.txt').readlines()
 
-		if(model_age!=None):
+		if(model_age!=None and flag_show_result["age"]):
 			shape = model_age.layers[0].get_output_at(0).get_shape().as_list()
 			img_keras = cv2.resize(face_image, (shape[1],shape[2]))
 			#img_keras = img_keras[::-1, :, ::-1].copy()	#BGR to RGB
@@ -296,7 +296,7 @@ def show_results(img,results, img_width, img_height, model_age, model_gender, mo
 			cv2.putText(target_image, "Age : "+label, (xmin2,ymax2+offset), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0,0,250));
 			offset=offset+16
 
-		if(model_gender!=None):
+		if(model_gender!=None and flag_show_result["gender"]):
 			shape = model_gender.layers[0].get_output_at(0).get_shape().as_list()
 
 			img_gender = cv2.resize(face_image, (shape[1],shape[2]))
@@ -310,7 +310,7 @@ def show_results(img,results, img_width, img_height, model_age, model_gender, mo
 			cv2.putText(target_image, "Gender : %.2f" % prob_gender_keras + " " + lines_gender[cls_gender_keras], (xmin2,ymax2+offset), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.8, (0,0,250));
 			offset=offset+16
 
-		if(model_emotion!=None):
+		if(model_emotion!=None and flag_show_result["emotion"]):
 			shape = model_emotion.layers[0].get_output_at(0).get_shape().as_list()
 
 			img_fer2013 = cv2.resize(face_image, (shape[1],shape[2]))
@@ -340,6 +340,11 @@ def main(argv):
 	else:
 		model_emotion = None
 
+	flag_show_result = {}
+	flag_show_result["gender"] = True
+	flag_show_result["age"] = False
+	flag_show_result["emotion"] = False
+
 	#Prepare WebCamera
 	cap = cv2.VideoCapture(0)
 	cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
@@ -363,7 +368,7 @@ def main(argv):
 		results = interpret_output_yolov2(out2, img.shape[1], img.shape[0])
 
 		#Age and Gender Detection
-		show_results(img_cv,results, img.shape[1], img.shape[0], model_age, model_gender, model_emotion)
+		show_results(img_cv,results, img.shape[1], img.shape[0], model_age, model_gender, model_emotion, flag_show_result)
 
 		k = cv2.waitKey(1)
 		if k == 27:
