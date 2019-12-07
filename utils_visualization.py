@@ -7,6 +7,7 @@ from matplotlib.widgets import Button
 import os
 
 import cv2
+import numpy as np
 
 def get_display_resolution():
     root = tk.Tk()
@@ -160,31 +161,28 @@ class FileNameIterator(object):
         write_logs_ui("%d" % self.ind)
 
 
-def image_with_landmarks(img, result):
+def image_with_box_and_points(img, pts, highlight_color = (255,155,0), box = None):
     image = img.copy()
-
-    # Result is an array with all the bounding boxes detected. We know that for 'ivan.jpg' there is only one.
-    bounding_box = result[0]['box']
-    keypoints = result[0]['keypoints']
-    highlight_color = (255,155,0)
-
-    cv2.rectangle(image,
-                  (bounding_box[0], bounding_box[1]),
-                  (bounding_box[0]+bounding_box[2], bounding_box[1] + bounding_box[3]),
-                  highlight_color,
-                  2)
-
-    cv2.circle(image,(keypoints['left_eye']), 2, highlight_color, 2)
-    cv2.circle(image,(keypoints['right_eye']), 2, highlight_color, 2)
-    cv2.circle(image,(keypoints['nose']), 2, highlight_color, 2)
-    cv2.circle(image,(keypoints['mouth_left']), 2, highlight_color, 2)
-    cv2.circle(image,(keypoints['mouth_right']), 2, highlight_color, 2)
-
-    return image
-
-
-def image_with_points(img, pts, highlight_color = (0,0,255)):
-    image = img.copy()
+    if box is not None:
+        cv2.rectangle(image,
+                      (box[0], box[1]),
+                      (box[0]+box[2], box[1] + box[3]),
+                      highlight_color,
+                      2)
     for p in pts:
         cv2.circle(image,(p[0], p[1]), 2, highlight_color, 2)
     return image
+
+
+def image_with_landmarks(img, result):
+    # Result is an array with all the bounding boxes detected. We know that for 'ivan.jpg' there is only one.
+    bounding_box = result[0]['box']
+    keypoints = result[0]['keypoints']
+
+    pts = np.array([keypoints['left_eye'], keypoints['right_eye'], 
+        keypoints['nose'], keypoints['mouth_left'], keypoints['mouth_right']])
+    return image_with_box_and_points(img, pts, highlight_color=(255,155,0), box = bounding_box)
+
+
+def image_with_points(img, pts, highlight_color = (0,0,255)):
+    return image_with_box_and_points(img, pts, highlight_color = highlight_color)
