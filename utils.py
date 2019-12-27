@@ -38,22 +38,20 @@ def scale_and_recenter_points(points, old_size, new_size):
     debug = False
     # debug = True
 
-    points3d = np.transpose(points)
-
     (h, w) = old_size
     (cX, cY) = (w // 2, h // 2)
     (nH, nW) = new_size
     (scaleH, scaleW) = (nH/h, nW/w)
 
     # compute the new bounding dimensions of the image
-    points3d_n = points3d.copy()
+    points3d_n = points.copy()
 
     # adjust the rotation matrix to take into account translation
-    points3d_n[0,:] *= scaleW
-    points3d_n[1,:] *= scaleH
+    points3d_n[:,0] *= scaleW
+    points3d_n[:,1] *= scaleH
 
-    points3d_n[0,:] += (nW / 2)## - cX
-    points3d_n[1,:] += (nH / 2)## - cY
+    points3d_n[:,0] += (nW / 2)## - cX
+    points3d_n[:,1] += (nH / 2)## - cY
 
     if debug:
         print('points3d', points3d)
@@ -61,4 +59,4 @@ def scale_and_recenter_points(points, old_size, new_size):
         print('nW; nH', nW, nH)
 
     # perform the actual rotation and return the image
-    return np.transpose(points3d_n)
+    return points3d_n
