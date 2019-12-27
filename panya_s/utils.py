@@ -6,7 +6,7 @@ import math
 
 detector = MTCNN(min_face_size=12)
 
-def align(img, output_image_size=112):
+def align(img, output_image_size=112, translate=False):
 
     A = detector.detect_faces(img)
     highest = 0
@@ -45,6 +45,8 @@ def align(img, output_image_size=112):
     tform = trans.SimilarityTransform()
     tform.estimate(dst, src)
     M = tform.params[0:2,:]
+    if not translate:
+      M[0:2,2] = 0
 
     warped = cv2.warpAffine(img,M,(output_image_size,output_image_size), borderValue = 0.0)
 
