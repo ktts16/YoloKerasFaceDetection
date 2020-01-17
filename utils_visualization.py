@@ -2,6 +2,7 @@ import PIL
 import pyperclip
 
 import tkinter as tk
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 import os
@@ -186,3 +187,22 @@ def image_with_landmarks(img, result):
 
 def image_with_points(img, pts, highlight_color = (0,0,255)):
     return image_with_box_and_points(img, pts, highlight_color = highlight_color)
+
+
+# > Annotations
+def make_annotation(ax, text, pos, pos_text=(0,0)):
+    return ax.annotate("\\*\\" + text, xy=pos, xytext=pos_text, textcoords="offset points",
+                       bbox=dict(boxstyle="round", fc="w"))
+
+
+def get_annotations(ax, filter_type=mpl.text.Annotation):
+    annotations = [child for child in ax.get_children() if isinstance(child, filter_type)]
+    has_one_element = len(annotations) == 1
+    if has_one_element:
+        return (annotations[0], has_one_element)
+    else:
+        return (annotations, has_one_element)
+
+
+def is_type_AxesSubplot(obj):
+    return issubclass(type(obj), mpl.axes.SubplotBase)
