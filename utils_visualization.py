@@ -85,7 +85,7 @@ def create_annotations_in_figure_2(fig, dfif):
                 axes.set_label('%d' % index)
             text = dfif.df_row_to_str(row)
             annot = make_annotation(axes, text, (10, 10))
-            annot.set_visible(initial_visibility)
+            annot.set_visible(True)
 
 
 def image_grid_plot(images, figsize=(20,20), columns=5, fig=None):
