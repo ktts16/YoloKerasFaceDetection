@@ -9,6 +9,7 @@ import os
 
 import cv2
 import numpy as np
+from DFInterface import *
 
 def get_display_resolution():
     root = tk.Tk()
@@ -73,6 +74,20 @@ def onclick(event):
         pyperclip.copy(subplot_label.split(".")[0])
 
 
+def create_annotations_in_figure_2(fig, dfif):
+    for axes in fig.get_axes():
+        if is_type_AxesSubplot(axes):
+            search_str = axes.get_title()
+            row = dfif.get_df_row(search_str)
+            if len(row.index) == 1:
+                index = row.index.tolist()[0]
+                axes.set_title('')
+                axes.set_label('%d' % index)
+            text = dfif.df_row_to_str(row)
+            annot = make_annotation(axes, text, (10, 10))
+            annot.set_visible(initial_visibility)
+
+
 def image_grid_plot(images, figsize=(20,20), columns=5, fig=None):
     if fig is None:
         fig = plt.figure(figsize=figsize)
@@ -96,7 +111,7 @@ def image_grid_plot(images, figsize=(20,20), columns=5, fig=None):
 
 
 class FileNameIterator(object):
-    def __init__(self, filepath, filenames, n, columns, ind=0, figsize=None):
+    def __init__(self, filepath, filenames, n, columns, df=None, ind=0, figsize=None):
         self.filenames = filenames
         self.filepath = filepath
         self.n = n
@@ -108,6 +123,8 @@ class FileNameIterator(object):
             # make figure size: half of screen's width and screen's height
             self.figsize = (screen_width/2/dpi, screen_height/dpi)
         self.columns = columns
+        self.df = df # data frame
+        self.dfif = IMDBInterface(df)
 
         self.fig = image_grid_plot(None, figsize=self.figsize, columns=self.columns)
         # move the upper left corner of figure at middle of screen's width
@@ -115,6 +132,7 @@ class FileNameIterator(object):
 
         self.add_buttons()
         self.next_redraw(None)
+        self.create_annotations()
 
 
     def add_buttons(self):
@@ -158,8 +176,13 @@ class FileNameIterator(object):
 
     def redraw(self, files):
         self.fig = image_grid_plot(open_images(self.filepath, files), figsize=self.figsize, columns=self.columns, fig=self.fig)
+        self.create_annotations()
         plt.draw()
         write_logs_ui("%d" % self.ind)
+
+    def create_annotations(self):
+        if self.dfif is not None:
+            create_annotations_in_figure_2(self.fig, self.dfif)
 
 
 def image_with_box_and_points(img, pts, highlight_color = (255,155,0), box = None):
@@ -191,7 +214,7 @@ def image_with_points(img, pts, highlight_color = (0,0,255)):
 
 # > Annotations
 def make_annotation(ax, text, pos, pos_text=(0,0)):
-    return ax.annotate("\\*\\" + text, xy=pos, xytext=pos_text, textcoords="offset points",
+    return ax.annotate(text, xy=pos, xytext=pos_text, textcoords="offset points",
                        bbox=dict(boxstyle="round", fc="w"))
 
 
