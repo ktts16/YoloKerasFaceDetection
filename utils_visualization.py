@@ -74,6 +74,30 @@ def onclick(event):
         pyperclip.copy(subplot_label.split(".")[0])
 
 
+def hover(event):
+    if event.inaxes is not None:
+        ax = event.inaxes
+        annot, has_one_element = get_annotations(ax)
+        if has_one_element == False:
+            return
+        else:
+            if not annot.get_visible():
+                annot.set_visible(True)
+                ax.figure.canvas.draw_idle()
+
+
+def leave_axes(event):
+    if event.inaxes is not None:
+        ax = event.inaxes
+        annot, has_one_element = get_annotations(ax)
+        if has_one_element == False:
+            return
+        else:
+            if annot.get_visible():
+                annot.set_visible(False)
+                ax.figure.canvas.draw_idle()
+
+
 def create_annotations_in_figure_2(fig, dfif):
     for axes in fig.get_axes():
         if is_type_AxesSubplot(axes):
@@ -107,6 +131,8 @@ def image_grid_plot(images, figsize=(20,20), columns=5, fig=None):
     cid = fig.canvas.mpl_connect('button_press_event', onclick)
     # make subplots has no margin
     fig.subplots_adjust(bottom=0.05, top=0.95, left=0, right=1, wspace=0.0)
+    fig.canvas.mpl_connect("motion_notify_event", hover)
+    fig.canvas.mpl_connect('axes_leave_event', leave_axes)
     return fig
 
 
