@@ -77,3 +77,29 @@ def ndarray_to_list(arr):
     return ls
 
 
+from math import isclose, isnan
+
+def is_equal_to_df_column(arr, df_column):
+    if not (isinstance(arr, np.ndarray) or isinstance(arr, list)):
+        raise Exception("'df_column' is not of type 'numpy.ndarray' or 'list'.")
+    if not isinstance(df_column, pd.core.series.Series):
+        raise Exception("'df_column' is not of type 'pandas.core.series.Series'.")
+    if len(arr) != df_column.shape[0]:
+        print('#rows:', len(arr), df_column.shape[0], df_column.shape)
+        raise Exception('Failed: # rows are not equal')
+    else:
+        print('Passed: # rows are equal', len(arr), df_column.shape[0], sep='\t')
+    is_equal = []
+    for idx in range(len(arr)):
+        if isinstance(arr[idx], np.float64):
+            if isnan(arr[idx]) and isnan(df_column.iloc[idx]):
+                v = True
+            else:
+                v = isclose(arr[idx], df_column.iloc[idx], rel_tol=1e-6)
+        else:
+            v = arr[idx] == df_column.iloc[idx]
+        is_equal.append(v)
+    index_not_equal = [i for i, eq in enumerate(is_equal) if eq == False]
+    return all_equal(is_equal, True), is_equal, index_not_equal
+
+
