@@ -60,3 +60,20 @@ def scale_and_recenter_points(points, old_size, new_size):
 
     # perform the actual rotation and return the image
     return points3d_n
+
+
+def all_equal(arr, value):
+    if isinstance(arr, list):
+        arr = np.array(arr)
+    return np.all(arr == value, axis = 0)
+
+
+def ndarray_to_list(arr):
+    ls = None
+    if isinstance(arr[0], np.ndarray) and all_equal([el.shape[0] for el in arr], 1):
+        ls = [el[0] for el in arr]
+    elif isinstance(arr[0], np.uint16) or isinstance(arr[0], np.float64):
+        ls = arr
+    return ls
+
+
