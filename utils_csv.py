@@ -12,9 +12,14 @@ def create_csv_writer(csv_file):
     return csv.writer(csv_file, delimiter=',')
 
 
-def overwrite_and_clear_content(csv_filepath):
+def overwrite_and_clear_content(csv_filepath, initial_content=None):
     with open(csv_filepath, mode='w') as csv_file:
-        create_csv_writer(csv_file).writerow([])
+        writer = create_csv_writer(csv_file)
+        if initial_content is not None:
+            for row in initial_content:
+                writer.writerow(row)
+        else:
+            writer.writerow([])
 
 
 def close_file(file, verbose=True):
