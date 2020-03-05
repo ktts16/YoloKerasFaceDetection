@@ -14,7 +14,7 @@ def is_valid(face_score,second_face_score,age,gender):
         return False
     if (~np.isnan(second_face_score)) and second_face_score > 0.0:
         return False
-    if ~(0 <= age <= 100):
+    if not(0 <= age <= 100):
         return False
     if np.isnan(gender):
         return False
