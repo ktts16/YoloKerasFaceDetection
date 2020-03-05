@@ -164,3 +164,18 @@ def iterate_filter_len(dt, val_len, operator='eql'):
 
 def gender_np_float64_to_str(n):
     return 'M' if n == 1.0 else 'F'
+
+
+def image_groups_by_rm_id(valid_set, list_full_path):
+    if not isinstance(valid_set, set):
+        valid_set = set(valid)
+    if not isinstance(list_full_path, list):
+        raise Exception("'list_full_path' is NOT of type 'list'")
+    images = {}
+    for idx, nameID, imageID, _, _ in serialize_filenames(list_full_path, enumerated=True):
+        if (idx not in valid_set) or (imageID is None):
+            continue
+        if imageID not in images:
+            images[imageID] = []
+        images[imageID].append((idx, IMDB_url(nameID, imageID)))
+    return images
