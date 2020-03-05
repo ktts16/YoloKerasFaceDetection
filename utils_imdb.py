@@ -116,6 +116,16 @@ class IMDBDataSet:
             self.meta_df = df
 
 
+    def calculate_age(self):
+        self.meta_df['age'] = [calc_age(photo_taken, dob) for photo_taken, dob in zip(self.meta_df['photo_taken'], self.meta_df['dob'])]
+
+
+    def is_image_valid(self):
+        self.meta_df['is_image_valid'] = [is_valid(fs1, fs2, age, gender)
+            for fs1, fs2, age, gender in zip(self.meta_df.face_score, self.meta_df.second_face_score, self.meta_df.age, self.meta_df.gender)]
+        self.valid = [index for index, item in self.meta_df['is_image_valid'].iteritems() if item == True]
+
+
 def IMDB_url(nameID, imageID):
     return 'https://www.imdb.com/name/' + nameID + '/mediaviewer/' + imageID
 
