@@ -1,4 +1,5 @@
 from IPython.display import Markdown, display
+from IPython.core.display import display, HTML
 
 def printmd(string, color=None):
     colorstr = "<span style='color:{}'>{}</span>".format(color, string)
