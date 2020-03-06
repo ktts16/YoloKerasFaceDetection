@@ -77,6 +77,13 @@ def ndarray_to_list(arr):
     return ls
 
 
+def str_to_int(string):
+    var = None
+    if string.isdigit():
+        var = int(string)
+    return var
+
+
 from math import isclose, isnan
 
 def is_equal_to_df_column(arr, df_column):
