@@ -1,6 +1,9 @@
 scipy
+pandas
 opencv-python
 matplotlib
 keras
-tensorflow-gpu
 keras_squeezenet
+tensorflow-gpu
+pillow
+jupyter
